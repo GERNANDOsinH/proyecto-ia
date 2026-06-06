@@ -2,26 +2,28 @@
 #include <string>
 #include <vector>
 
+#define uint unsigned int
+
 using namespace std;
 
 struct node {
-    int id;  // ID del nodo.
-    int f_i; // Capacidad de carga del nodo(si se coloca un cargador).
-    int c_i; // Costo asociado a colocar un punto de carga en el nodo.
+    bool is_far; // Declara si el nodo es lejano o no.
+    uint f_i;    // Capacidad de carga del nodo(si se coloca un cargador).
+    uint c_i;    // Costo asociado a colocar un punto de carga en el nodo.
 };
 
 class AE {
     private:
-        int alpha;                   // Probabilidad de una mutación.
-        int max_iteration;           // Maximas iteraciones permitidas.
+        float alpha;                 // Probabilidad de una mutación.
+        uint max_iterations;          // Maximas iteraciones permitidas.
 
-        int num_nodes;               // Número de nodos disponibles, incluyendo nodos lejanos.
-        int size_poblation;          // Tamaño de la población.
+        uint num_nodes;              // Número de nodos disponibles, incluyendo nodos lejanos.
+        uint size_poblation;         // Tamaño de la población.
 
         vector<node> nodes;          // Nodos no lejanos.
-        vector<node> far_nodes;      // Nodos leganos.
         vector<vector<bool>> matrix; // Matriz población.
-        vector<int> FEs;             // Función de evaluación de cada instancia en la población.
+        vector<uint> FEs;            // Función de evaluación de cada instancia en la población.
+        vector<vector<uint>> dist;   // Distancia entre todos los nodos.
     public:
         /**
          * Método constructor, lee un archivo de texto para leer los parámetros de la ejecución.
@@ -37,18 +39,27 @@ class AE {
         * @return True si se reparo la instancia porque es infactible.
         */
         bool repair(int i) {
-
+            // ...
         }
         /**
          * Función que mide la calidad de una solución particular.
          * @param i: Individuo de la población que se quiere evaluar.
          * @return Costo asociado a una instancia en particular.
          */
-        int FE(int i) {
-            // ...
+        uint FE(int i) {
+            auto instance = matrix[i];
+            int out = 0;
+            for (int j = 0;j < num_nodes;j++)
+                out += (instance[j])? nodes[j].c_i : 0;
+            
+            return out;
+            
         }
-        // Función que resuelve el problema usando Algoritmo Evolutivo.
+        // Función que ejecuta el Algoritmo Evolutivo.
         void solve() {
-            // ...
+            uint i = max_iterations;
+            while (0 < i--) {
+
+            }
         }
 };
