@@ -11,7 +11,8 @@ struct node {
     uint f_i;    // Capacidad de carga del nodo(si se coloca un cargador).
     uint c_i;    // Costo asociado a colocar un punto de carga en el nodo.
     uint D_i;    // Demanda del nodo i.
-    uint s_i;     // Rango del nodo i.
+    uint s_i;    // Rango del nodo i.
+    float coef;  // Coeficiente costo/covertura. 
 };
 
 class AE {
@@ -30,6 +31,7 @@ class AE {
         vector<vector<bool>> matrix; // Matriz población.
         vector<uint> FEs;            // Función de evaluación de cada instancia en la población.
         vector<vector<uint>> dist;   // Distancia entre todos los nodos.
+
     public:
         /**
          * Método constructor, lee un archivo de texto para leer los parámetros de la ejecución.
@@ -39,13 +41,26 @@ class AE {
             // ...
         }
         ~AE();
+        /**
+        * Función que mide el area de la ciudad que cubre la instancia actual.
+        * @param i: Elemento de la población cuya covertura total se quiere medir.
+        * @return Covertura total de la instancia i de la población
+        */
+        uint coverage(int i) {
+            auto instancia = matrix[i];
+                uint out = 0;
+                for (int j = 0;j < num_nodes;j++)
+                    out += (instancia[i])? nodes[i].s_i : 0;
+                
+                return out;
+        }
         /** 
         * Función que comprueba si la solución actual es factible y la repara en caso contrario.
         * @param i: Individuo de la población que se quiere reparar.
         * @return True si se reparo la instancia porque es infactible.
         */
         bool repair(int i) {
-            // ...
+            // Simular 
         }
         /**
          * Función que mide la calidad de una solución particular.
