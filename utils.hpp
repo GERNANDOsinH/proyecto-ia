@@ -10,13 +10,19 @@ struct node {
     bool is_far; // Declara si el nodo es lejano o no.
     uint f_i;    // Capacidad de carga del nodo(si se coloca un cargador).
     uint c_i;    // Costo asociado a colocar un punto de carga en el nodo.
+    uint D_i;    // Demanda del nodo i.
+    uint s_i;     // Rango del nodo i.
 };
 
 class AE {
     private:
+        // ==== Atributos algoritmo ==== // 
         float alpha;                 // Probabilidad de una mutación.
-        uint max_iterations;          // Maximas iteraciones permitidas.
+        uint max_iterations;         // Maximas iteraciones permitidas.
 
+        // ==== Atributos problema ==== //
+        uint CityArea;               // Área de la ciudad que se desea cubrir.
+        uint R;                      // Autonomia promedio de los vehiculos.
         uint num_nodes;              // Número de nodos disponibles, incluyendo nodos lejanos.
         uint size_poblation;         // Tamaño de la población.
 
