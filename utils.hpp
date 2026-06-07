@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #define uint unsigned int
 
@@ -12,7 +13,6 @@ struct node {
     uint c_i;    // Costo asociado a colocar un punto de carga en el nodo.
     uint D_i;    // Demanda del nodo i.
     uint s_i;    // Rango del nodo i.
-    float coef;  // Coeficiente costo/covertura. 
 };
 
 class AE {
@@ -41,26 +41,64 @@ class AE {
             // ...
         }
         ~AE();
-        /**
-        * Función que mide el area de la ciudad que cubre la instancia actual.
-        * @param i: Elemento de la población cuya covertura total se quiere medir.
-        * @return Covertura total de la instancia i de la población
-        */
-        uint coverage(int i) {
-            auto instancia = matrix[i];
-                uint out = 0;
-                for (int j = 0;j < num_nodes;j++)
-                    out += (instancia[i])? nodes[i].s_i : 0;
-                
-                return out;
-        }
         /** 
         * Función que comprueba si la solución actual es factible y la repara en caso contrario.
         * @param i: Individuo de la población que se quiere reparar.
         * @return True si se reparo la instancia porque es infactible.
         */
         bool repair(int i) {
-            // Simular 
+            bool rest1 = false; // Se asigno una estación de carga a un nodo lejano.
+            bool rest2 = false; // La configuración actual es transitable.
+            bool out = false;          // Retorna si se hizo un cambio.
+
+            struct option {
+                int index;
+                float coef;
+            };
+            uint area_covered = 0;
+            vector<option> options1; // Posibles elecciones, incluye todos los nodos.
+            vector<option> options2; // Posibles elecciones, solo nodos lejanos.
+            option x;
+            for (int j = 0;j < num_nodes;j++) {
+                if (!matrix[i][j]) {
+                    x = {j, ((float)nodes[j].s_i)/(nodes[j].c_i)};
+                    options1.push_back(x);
+                    if (nodes[j].is_far)
+                        options2.push_back(x);
+
+                }
+                area_covered += nodes[j].s_i;
+                rest1 |= nodes[j].is_far;
+            }
+            if (!rest1) {
+                sort(
+                    options2.begin(),
+                    options2.end(),
+                    [](const option& a, const option& b)
+                    { return a.coef < b.coef; });
+                int j = options2[0].index;
+                matrix[i][j] = true;
+                area_covered += nodes[j].s_i;
+                for (int k = 0;k < options1.size();k++) {
+                    if (options1[k].index == j) {
+                        options1.erase(options1.begin() + k);
+                        break;
+                    }
+                }
+                out = true;
+            }
+            sort(
+                options1.begin(),
+                options1.end(),
+                [](const option& a, const option& b)
+                { return a.coef < b.coef; });
+            while (area_covered < CityArea || 0 < options1.size()) {
+                int j = options1[0].index;
+                area_covered += nodes[j].s_i;
+                options1.erase(options1.begin());
+                out = true;
+            }
+            
         }
         /**
          * Función que mide la calidad de una solución particular.
