@@ -52,9 +52,19 @@ AE::AE(uint64_t size_poblation, double beta, string src) {
     }
 }
 AE::~AE() {}
+results AE::print() {
+    results out = {1e9, 0};
+    uint64_t current_FE;
+    for (int i = 0;i < num_nodes;i++) {
+        current_FE = FE(i);
+        out.better_FE = (current_FE < out.better_FE)? current_FE : out.better_FE;
+        out.average_FE += current_FE;
+    }
+    out.average_FE /= num_nodes;
+    return out;
+}
 /**
- * Operador cruzamiento entre 2 individuos.
- * @param pos: Posición donde se aplicara el cruzamiento.
+ * Operador cruzamiento por punto entre 2 individuos.
  * @param i  : Indice padre 1 que se cruzara.
  * @param j  : Indice padre 2 que se cruzara.
  * @param i_p: Indice hijo 1.
@@ -311,146 +321,23 @@ void AE::solve(uint64_t max_iterations) {
         matrix[0] = mejor;
     }
 }
-void AE::save(std::string src) {
-    std::ofstream file(src);
-    
-    if (!file.is_open()) {
-        throw std::runtime_error("Error: No se pudo abrir o crear el archivo para guardar " + src);
-    }
 
-    // Iterar sobre cada individuo de la población
-    for (uint64_t i = 0; i < size_poblation; i++) {
-        // Iterar sobre cada gen (nodo) del individuo
-        for (uint64_t j = 0; j < num_nodes; j++) {
-            // Se castea a int para que se escriba como texto '0' o '1' y no como un caracter ASCII
-            file << static_cast<int>(matrix[i][j]);
-            
-            // Agregar un espacio entre los valores, excepto al final de la línea
-            if (j < num_nodes - 1) {
-                file << " ";
-            }
-        }
-        // Salto de línea para el siguiente individuo
-        file << " FE: " << static_cast<uint>(FE(i)) << "\n";
-    }
-
-    file.close();
-}
 /**
- * Constructor de penalty_AE
+ * Operador cruzamiento uniforme entre 2 individuos.
+ * @param i  : Indice padre 1 que se cruzara.
+ * @param j  : Indice padre 2 que se cruzara.
+ * @param i_p: Indice hijo 1.
+ * @param j_p: Indice hijo 2.
  */
-penalty_AE::penalty_AE(uint64_t size_poblation, double beta, uint64_t M1, uint64_t M2, uint64_t M3, string src) : AE(size_poblation, beta, src) {
-    this->M1 = M1;
-    this->M2 = M2;
-    this->M3 = M3;
-}
-penalty_AE::~penalty_AE() {}
-uint64_t penalty_AE::FE(int i, uint64_t& out_base_cost) {
-    out_base_cost = 0;
-    for (uint64_t j = 0; j < num_nodes; j++) {
-        if (matrix[i][j]) {
-            out_base_cost += nodes[j].c_i;
+void uniform_AE::cruce(int i, int j, int i_p, int j_p, vector<vector<uint8_t>>& next_gen) {
+    for (uint64_t k = 0; k < num_nodes; ++k) {
+        if (dist_double(motor) < 0.5) {
+            next_gen[i_p][k] = matrix[i][k];
+            next_gen[j_p][k] = matrix[j][k];
+        } 
+        else {
+            next_gen[i_p][k] = matrix[j][k];
+            next_gen[j_p][k] = matrix[i][k];
         }
-    }
-    
-    uint64_t total_penalties = 0;
-    return out_base_cost + total_penalties;
-}
-uint64_t penalty_AE::FE(int i) {
-    uint64_t dummy;
-    return FE(i, dummy);
-}
-/**
- * Itera el algoritmo evolutivo, a diferencia del normal este tiene capacidades de control para aumentar la penalización.
- * @param max_iterations: Iteraciones maximas permitidas.
- */
-void penalty_AE::solve(uint64_t max_iterations) {
-    uint64_t iteration = max_iterations;
-    double torta;
-    uint64_t index = 0;
-    uniform_int_distribution<int> dist_cruce(1, num_nodes - 1);
-
-    while (0 < iteration--) {
-        double better = -1.0;
-        torta = 0.0;
-        uint64_t feasible_count = 0;
-
-        for (int i = 0; i < size_poblation; i++) {
-            uint64_t base_cost = 0;
-            // Evaluamos extrayendo el costo base simultáneamente
-            uint64_t total_cost = FE(i, base_cost); 
-
-            if (total_cost == base_cost && base_cost > 0) {
-                feasible_count++;
-            }
-
-            FEs[i] = 1.0 / total_cost;
-            if (better < FEs[i]) {
-                better = FEs[i];
-                index = i;
-            }
-            torta += FEs[i];
-        }
-
-        double feasible_ratio = (double)feasible_count / size_poblation;
-        if (feasible_ratio < 0.15) {
-            M1 = (uint)(M1 * 1.5) + 1;
-            M2 = (uint)(M2 * 1.5) + 1;
-            M3 = (uint)(M3 * 1.5) + 1;
-        } else if (feasible_ratio > 0.80 && M1 > 5 && M2 > 5 && M3 > 5) {
-            M1 = (uint)(M1 * 0.9);
-            M2 = (uint)(M2 * 0.9);
-            M3 = (uint)(M3 * 0.9);
-        }
-
-        for (uint64_t i = 0; i < size_poblation; i++) {
-            FEs[i] /= torta;
-        }
-
-        auto mejor = matrix[index];
-
-        vector<int> parents(size_poblation);
-        for (uint64_t i = 0; i < size_poblation; i++) {
-            double r = dist_double(motor);
-            double accum = 0.0;
-            for (uint64_t j = 0; j < size_poblation; j++) {
-                accum += FEs[j];
-                if (r <= accum) {
-                    parents[i] = j;
-                    break;
-                }
-            }
-        }
-
-        vector<vector<uint8_t>> next_gen(size_poblation, vector<uint8_t>(num_nodes));
-        int num_pairs = size_poblation / 2;
-        
-        for (int i = 0; i < num_pairs; i++) {
-            int p1 = parents[2 * i];
-            int p2 = parents[2 * i + 1];
-            int c1 = 2 * i;
-            int c2 = 2 * i + 1;
-            
-            cruce(p1, p2, c1, c2, next_gen);
-        }
-        
-        if (size_poblation % 2 != 0) {
-            next_gen.back() = matrix[parents.back()];
-        }
-
-        for (uint64_t i = 0; i < size_poblation; i++) {
-            for (uint64_t j = 0; j < num_nodes; j++) {
-                if (dist_double(motor) < beta) {
-                    next_gen[i][j] = next_gen[i][j] == 1 ? 0 : 1;
-                }
-            }
-        }
-
-        matrix = std::move(next_gen);
-        matrix[0] = mejor;
-    }
-
-    for (uint64_t i = 0; i < size_poblation; i++) {
-        repair(i);
     }
 }
