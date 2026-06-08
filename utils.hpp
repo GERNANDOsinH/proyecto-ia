@@ -8,62 +8,60 @@
 #include <random>
 #include <cstdint>
 
-using uint = unsigned int;
-
 struct node {
     bool is_far; // Declara si el nodo es lejano o no.
-    uint f_i;    // Capacidad de carga del nodo(si se coloca un cargador).
-    uint c_i;    // Costo asociado a colocar un punto de carga en el nodo.
-    uint D_i;    // Demanda del nodo i.
-    uint s_i;    // Rango del nodo i.
+    uint64_t f_i;    // Capacidad de carga del nodo(si se coloca un cargador).
+    uint64_t c_i;    // Costo asociado a colocar un punto de carga en el nodo.
+    uint64_t D_i;    // Demanda del nodo i.
+    uint64_t s_i;    // Rango del nodo i.
 };
 
 struct option {
     int index;
-    float coef;
+    double coef;
 };
 
 class AE {
     protected:
         // ==== Atributos algoritmo ==== // 
-        float beta;                            // Probabilidad de una mutación.
+        double beta;                            // Probabilidad de una mutación.
         std::mt19937 motor;                    // Generador de números aleatorios.
-        uint size_poblation;                   // Tamaño de la población.
-        std::uniform_real_distribution<float> dist_float;
+        uint64_t size_poblation;                   // Tamaño de la población.
+        std::uniform_real_distribution<double> dist_double;
 
         // ==== Atributos problema ==== //
-        float alpha;
-        uint CityArea;                            // Área de la ciudad que se desea cubrir.
-        uint R;                                   // Autonomia promedio de los vehiculos.
-        uint num_nodes;                           // Número de nodos disponibles, incluyendo nodos lejanos.
+        double alpha;
+        uint64_t CityArea;                            // Área de la ciudad que se desea cubrir.
+        uint64_t R;                                   // Autonomia promedio de los vehiculos.
+        uint64_t num_nodes;                           // Número de nodos disponibles, incluyendo nodos lejanos.
    
         std::vector<node> nodes;                  // Nodos.
         std::vector<std::vector<uint8_t>> matrix; // Matriz población.
-        std::vector<float> FEs;                   // Función de evaluación de cada instancia en la población.
-        std::vector<std::vector<float>> dist;     // Distancia entre todos los nodos.
+        std::vector<double> FEs;                   // Función de evaluación de cada instancia en la población.
+        std::vector<std::vector<double>> dist;     // Distancia entre todos los nodos.
 
         // === Método protegido === //
-        void cruce(int pos, int i, int j, int i_p, int j_p, std::vector<std::vector<uint8_t>>& next_gen);
+        void cruce(int i, int j, int i_p, int j_p, std::vector<std::vector<uint8_t>>& next_gen);
     public:
-        AE(uint size_poblation, float beta, std::string src);
+        AE(uint64_t size_poblation, double beta, std::string src);
         virtual ~AE();
-        virtual uint FE(int i);
+        virtual uint64_t FE(int i);
         bool repair(int i);
-        virtual void solve(uint max_iterations);
+        virtual void solve(uint64_t max_iterations);
         void save(std::string src);
 };
 
 class penalty_AE : public AE {
     protected:
-        uint M1; // Penalización no asignación nodos lejanos.
-        uint M2; // Penalización no transitividad.
-        uint M3; // Penalización demandas no cubiertas.
+        uint64_t M1; // Penalización no asignación nodos lejanos.
+        uint64_t M2; // Penalización no transitividad.
+        uint64_t M3; // Penalización demandas no cubiertas.
     public:
-        penalty_AE(uint size_poblation, float beta, uint M1, uint M2, uint M3, std::string src);
+        penalty_AE(uint64_t size_poblation, double beta, uint64_t M1, uint64_t M2, uint64_t M3, std::string src);
         virtual ~penalty_AE();
-        uint FE(int i, uint& out_base_cost);
-        uint FE(int i) override;
-        void solve(uint max_iterations) override;
+        uint64_t FE(int i, uint64_t& out_base_cost);
+        uint64_t FE(int i) override;
+        void solve(uint64_t max_iterations) override;
 };
 
-#endif
+#endif;
