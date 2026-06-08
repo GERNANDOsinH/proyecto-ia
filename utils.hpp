@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <random>
 
 #define uint unsigned int
 
@@ -20,6 +21,7 @@ class AE {
         // ==== Atributos algoritmo ==== // 
         float alpha;                 // Probabilidad de una mutación.
         uint max_iterations;         // Maximas iteraciones permitidas.
+        random_device seed;
 
         // ==== Atributos problema ==== //
         uint CityArea;               // Área de la ciudad que se desea cubrir.
@@ -32,6 +34,26 @@ class AE {
         vector<uint> FEs;            // Función de evaluación de cada instancia en la población.
         vector<vector<uint>> dist;   // Distancia entre todos los nodos.
 
+        /**
+         * Operador cruzamiento entre 2 individuos.
+         * @param pos: Posición donde se aplicara el cruzamiento.
+         * @param i  : Indice padre 1 que se cruzara.
+         * @param j  : Indice padre 2 que se cruzara.
+         * @param i_p: Indice hijo 1.
+         * @param j_p: Indice hijo 2.
+         */
+        void cruce(int pos,int i, int j, int i_p, int j_p) {
+            for (int k = 0;k < num_nodes;k++) {
+                if (k < pos) {
+                    matrix[i_p][k] = matrix[i][k];
+                    matrix[j_p][k] = matrix[j][k];
+                }
+                else {
+                    matrix[i_p][k] = matrix[j][k];
+                    matrix[j_p][k] = matrix[i][k];
+                }
+            }
+        }
     public:
         /**
          * Método constructor, lee un archivo de texto para leer los parámetros de la ejecución.
@@ -99,6 +121,7 @@ class AE {
                 out = true;
             }
             
+            // Simular
         }
         /**
          * Función que mide la calidad de una solución particular.
@@ -116,9 +139,16 @@ class AE {
         }
         // Función que ejecuta el Algoritmo Evolutivo.
         void solve() {
-            uint i = max_iterations;
-            while (0 < i--) {
+            uint iteration = max_iterations;
+            uint fe = 0;
+            fe--; // Cómo es sin singo llega al valor más alto posible.
+            for (int i = 0;i < num_nodes;i++) {
+                uint temp = FE(i);
+                if (temp < fe)
+                    fe = temp;
+            }
 
+            while (0 < iteration--) {
             }
         }
 };
