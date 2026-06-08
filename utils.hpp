@@ -6,10 +6,9 @@
 #include <vector>
 #include <algorithm>
 #include <random>
+#include <cstdint>
 
-#define uint unsigned int
-
-using namespace std;
+using uint = unsigned int;
 
 struct node {
     bool is_far; // Declara si el nodo es lejano o no.
@@ -27,28 +26,27 @@ struct option {
 class AE {
     protected:
         // ==== Atributos algoritmo ==== // 
-        float beta;                  // Probabilidad de una mutación.
-        mt19937 motor;               // Generador de números aleatorios.
-        uint size_poblation;         // Tamaño de la población.
-        uniform_int_distribution<int> dist_int;
-        uniform_real_distribution<float> dist_float;
+        float beta;                            // Probabilidad de una mutación.
+        std::mt19937 motor;                    // Generador de números aleatorios.
+        uint size_poblation;                   // Tamaño de la población.
+        std::uniform_real_distribution<float> dist_float;
 
         // ==== Atributos problema ==== //
         float alpha;
-        uint CityArea;               // Área de la ciudad que se desea cubrir.
-        uint R;                      // Autonomia promedio de los vehiculos.
-        uint num_nodes;              // Número de nodos disponibles, incluyendo nodos lejanos.
-
-        vector<node> nodes;          // Nodos.
-        vector<vector<bool>> matrix; // Matriz población.
-        vector<float> FEs;            // Función de evaluación de cada instancia en la población.
-        vector<vector<float>> dist;  // Distancia entre todos los nodos.
+        uint CityArea;                            // Área de la ciudad que se desea cubrir.
+        uint R;                                   // Autonomia promedio de los vehiculos.
+        uint num_nodes;                           // Número de nodos disponibles, incluyendo nodos lejanos.
+   
+        std::vector<node> nodes;                  // Nodos.
+        std::vector<std::vector<uint8_t>> matrix; // Matriz población.
+        std::vector<float> FEs;                   // Función de evaluación de cada instancia en la población.
+        std::vector<std::vector<float>> dist;     // Distancia entre todos los nodos.
 
         // === Método protegido === //
-        void cruce(int pos,int i, int j, int i_p, int j_p);
+        void cruce(int pos, int i, int j, int i_p, int j_p, std::vector<std::vector<uint8_t>>& next_gen);
     public:
-        AE(uint size_poblation, float beta, string src);
-        ~AE();
+        AE(uint size_poblation, float beta, std::string src);
+        virtual ~AE();
         virtual uint FE(int i);
         bool repair(int i);
         virtual void solve(uint max_iterations);
@@ -60,8 +58,9 @@ class penalty_AE : public AE {
         uint M2; // Penalización no transitividad.
         uint M3; // Penalización demandas no cubiertas.
     public:
-        penalty_AE(uint size_poblation, float beta, uint M1, uint M2, uint M3, string src);
-        ~penalty_AE();
+        penalty_AE(uint size_poblation, float beta, uint M1, uint M2, uint M3, std::string src);
+        virtual ~penalty_AE();
+        uint FE(int i, uint& out_base_cost);
         uint FE(int i) override;
         void solve(uint max_iterations) override;
 };
