@@ -60,7 +60,7 @@ AE::~AE() {}
  * @param j_p: Indice hijo 2.
  */
 void AE::cruce(int pos, int i, int j, int i_p, int j_p, vector<vector<uint8_t>>& next_gen) {
-    for (int k = 0; k < num_nodes; k++) {
+    for (uint k = 0; k < num_nodes; k++) {
         if (k < pos) {
             next_gen[i_p][k] = matrix[i][k];
             next_gen[j_p][k] = matrix[j][k];
@@ -85,9 +85,9 @@ bool AE::repair(int i) {
     std::vector<option> options2; // Posibles elecciones, solo nodos lejanos.
     option x;
     
-    for (int j = 0; j < num_nodes; j++) {
+    for (uint j = 0; j < num_nodes; j++) {
         if (matrix[i][j] == 0) { // Adaptado a uint8_t
-            x = {j, ((float)nodes[j].s_i)/(nodes[j].c_i)};
+            x = {(int)j, ((float)nodes[j].s_i)/(nodes[j].c_i)};
             options1.push_back(x);
             if (nodes[j].is_far)
                 options2.push_back(x);
@@ -137,11 +137,11 @@ bool AE::repair(int i) {
         out = true;
     }
     
-    for (int k = 0; k < num_nodes; k++) {
+    for (uint k = 0; k < num_nodes; k++) {
         uint current_capacity = 0;
         std::vector<int> candidates;
 
-        for (int j = 0; j < num_nodes; j++) {
+        for (uint j = 0; j < num_nodes; j++) {
             if (dist[k][j] <= alpha) { // j está dentro del radio de cobertura alpha de k
                 if (matrix[i][j] == 1) { // Adaptado a uint8_t
                     current_capacity += nodes[j].f_i; // Sumar capacidad de nodos ya instalados
@@ -168,7 +168,7 @@ bool AE::repair(int i) {
     bool connected = false;
     while (!connected) {
         std::vector<int> selected;
-        for (int j = 0; j < num_nodes; j++) {
+        for (uint j = 0; j < num_nodes; j++) {
             if (matrix[i][j] == 1) selected.push_back(j); // Adaptado a uint8_t
         }
         if (selected.empty()) break; // Seguridad
@@ -205,7 +205,7 @@ bool AE::repair(int i) {
             float min_d = 1e9; // Simula infinito
             
             for (int u : component) {
-                for (int k = 0; k < num_nodes; k++) {
+                for (uint k = 0; k < num_nodes; k++) {
                     if (matrix[i][k] == 0) { // Adaptado a uint8_t
                         if (dist[u][k] < min_d) {
                             min_d = dist[u][k];
@@ -234,7 +234,7 @@ bool AE::repair(int i) {
  */
 uint AE::FE(int i) {
     uint out = 0;
-    for (int j = 0;j < num_nodes;j++)
+    for (uint j = 0;j < num_nodes;j++)
         out += (matrix[i][j])? nodes[j].c_i : 0;
     
     return out;
@@ -243,7 +243,7 @@ uint AE::FE(int i) {
 void AE::solve(uint max_iterations) {
     uint iteration = max_iterations;
     float torta;
-    uint index;
+    uint index = 0;
 
     uniform_int_distribution<int> dist_cruce(1, num_nodes - 1);
 
@@ -251,7 +251,7 @@ void AE::solve(uint max_iterations) {
         float better = -1.0;
         torta = 0.0;
         
-        for (int i = 0; i < size_poblation; i++) {
+        for (uint i = 0; i < size_poblation; i++) {
             repair(i);
             float current_FE = FE(i);
             
@@ -264,17 +264,17 @@ void AE::solve(uint max_iterations) {
             torta += FEs[i];
         }
         
-        for (int i = 0; i < size_poblation; i++) {
+        for (uint i = 0; i < size_poblation; i++) {
             FEs[i] /= torta; 
         }
 
         auto mejor = matrix[index];
 
         vector<int> parents(size_poblation);
-        for (int i = 0; i < size_poblation; i++) {
+        for (uint i = 0; i < size_poblation; i++) {
             float r = dist_float(motor); 
             float accum = 0.0;
-            for (int j = 0; j < size_poblation; j++) {
+            for (uint j = 0; j < size_poblation; j++) {
                 accum += FEs[j];
                 if (r <= accum) {
                     parents[i] = j;
@@ -301,8 +301,8 @@ void AE::solve(uint max_iterations) {
             next_gen.back() = matrix[parents.back()];
         }
 
-        for (int i = 0; i < size_poblation; i++) {
-            for (int j = 0; j < num_nodes; j++) {
+        for (uint i = 0; i < size_poblation; i++) {
+            for (uint j = 0; j < num_nodes; j++) {
                 if (dist_float(motor) < beta) {
                     next_gen[i][j] = next_gen[i][j] == 1 ? 0 : 1; // Flip
                 }
@@ -349,7 +349,7 @@ penalty_AE::penalty_AE(uint size_poblation, float beta, uint M1, uint M2, uint M
 penalty_AE::~penalty_AE() {}
 uint penalty_AE::FE(int i, uint& out_base_cost) {
     out_base_cost = 0;
-    for (int j = 0; j < num_nodes; j++) {
+    for (uint j = 0; j < num_nodes; j++) {
         if (matrix[i][j]) {
             out_base_cost += nodes[j].c_i;
         }
@@ -369,7 +369,7 @@ uint penalty_AE::FE(int i) {
 void penalty_AE::solve(uint max_iterations) {
     uint iteration = max_iterations;
     float torta;
-    uint index;
+    uint index = 0;
     uniform_int_distribution<int> dist_cruce(1, num_nodes - 1);
 
     while (0 < iteration--) {
@@ -377,7 +377,7 @@ void penalty_AE::solve(uint max_iterations) {
         torta = 0.0;
         uint feasible_count = 0;
 
-        for (int i = 0; i < size_poblation; i++) {
+        for (uint i = 0; i < size_poblation; i++) {
             uint base_cost = 0;
             // Evaluamos extrayendo el costo base simultáneamente
             uint total_cost = FE(i, base_cost); 
@@ -405,17 +405,17 @@ void penalty_AE::solve(uint max_iterations) {
             M3 = (uint)(M3 * 0.9);
         }
 
-        for (int i = 0; i < size_poblation; i++) {
+        for (uint i = 0; i < size_poblation; i++) {
             FEs[i] /= torta;
         }
 
         auto mejor = matrix[index];
 
         vector<int> parents(size_poblation);
-        for (int i = 0; i < size_poblation; i++) {
+        for (uint i = 0; i < size_poblation; i++) {
             float r = dist_float(motor);
             float accum = 0.0;
-            for (int j = 0; j < size_poblation; j++) {
+            for (uint j = 0; j < size_poblation; j++) {
                 accum += FEs[j];
                 if (r <= accum) {
                     parents[i] = j;
@@ -442,8 +442,8 @@ void penalty_AE::solve(uint max_iterations) {
             next_gen.back() = matrix[parents.back()];
         }
 
-        for (int i = 0; i < size_poblation; i++) {
-            for (int j = 0; j < num_nodes; j++) {
+        for (uint i = 0; i < size_poblation; i++) {
+            for (uint j = 0; j < num_nodes; j++) {
                 if (dist_float(motor) < beta) {
                     next_gen[i][j] = next_gen[i][j] == 1 ? 0 : 1;
                 }
@@ -454,7 +454,7 @@ void penalty_AE::solve(uint max_iterations) {
         matrix[0] = mejor;
     }
 
-    for (int i = 0; i < size_poblation; i++) {
+    for (uint i = 0; i < size_poblation; i++) {
         repair(i);
     }
 }

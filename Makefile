@@ -5,7 +5,7 @@ CXXFLAGS = -Wall -Wextra -std=c++11 -O3
 # Archivos del proyecto
 SRCS = main.cpp utils.cpp
 OBJS = $(SRCS:.cpp=.o)
-TARGET = programa
+TARGET = solver
 
 # Regla principal: compila, enlaza y luego borra los .o
 all: $(TARGET)
