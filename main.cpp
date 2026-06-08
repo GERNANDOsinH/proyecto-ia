@@ -29,5 +29,9 @@ int main(int argc, char* argv[]) {
         cout << "Número de argumentos inválido";
         return 1;
     }
+    solver->save("first_poblation.txt");
     solver->solve(max_iterations);
+    solver->save("results.txt");
+    
+    return 0;
 }

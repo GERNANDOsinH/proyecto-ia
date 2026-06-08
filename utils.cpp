@@ -40,6 +40,15 @@ AE::AE(uint size_poblation, float beta, string src) {
         }
     }
     file.close();
+
+    uniform_int_distribution<int> dist_bin(0, 1);
+    
+    for (uint i = 0; i < this->size_poblation; i++) {
+        for (uint j = 0; j < this->num_nodes; j++) {
+            // Asigna aleatoriamente 0 (apagado) o 1 (encendido)
+            this->matrix[i][j] = static_cast<uint8_t>(dist_bin(this->motor));
+        }
+    }
 }
 AE::~AE() {}
 /**
@@ -303,6 +312,31 @@ void AE::solve(uint max_iterations) {
         matrix = std::move(next_gen);
         matrix[0] = mejor;
     }
+}
+void AE::save(std::string src) {
+    std::ofstream file(src);
+    
+    if (!file.is_open()) {
+        throw std::runtime_error("Error: No se pudo abrir o crear el archivo para guardar " + src);
+    }
+
+    // Iterar sobre cada individuo de la población
+    for (uint i = 0; i < size_poblation; i++) {
+        // Iterar sobre cada gen (nodo) del individuo
+        for (uint j = 0; j < num_nodes; j++) {
+            // Se castea a int para que se escriba como texto '0' o '1' y no como un caracter ASCII
+            file << static_cast<int>(matrix[i][j]);
+            
+            // Agregar un espacio entre los valores, excepto al final de la línea
+            if (j < num_nodes - 1) {
+                file << " ";
+            }
+        }
+        // Salto de línea para el siguiente individuo
+        file << "\n";
+    }
+
+    file.close();
 }
 /**
  * Constructor de penalty_AE

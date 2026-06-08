@@ -50,6 +50,7 @@ class AE {
         virtual uint FE(int i);
         bool repair(int i);
         virtual void solve(uint max_iterations);
+        void save(std::string src);
 };
 
 class penalty_AE : public AE {
