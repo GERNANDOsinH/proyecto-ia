@@ -4,7 +4,7 @@ using namespace std;
 
 void AE::print(uint i) {
     for (uint j = 0; j < num_nodes; j++)
-        cout << (poblacion[i][j])? "1 " : "0 ";
+        cout << ((poblacion[i][j])? "1 " : "0 ");
     cout << "FE: " << FE(i) << endl;
 }
 

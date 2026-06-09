@@ -6,8 +6,6 @@
 #include <vector>
 #include <cstdint>
 
-typedef uint uint64_t;
-
 struct node {
     uint C_i;    // Costo de instalar un cargador en el nodo i.
     uint S_i;    // Rango de servicio del nodo i.
@@ -34,16 +32,16 @@ class AE {
         std::vector<std::vector<double>> distancias;
 
         // === Métodos protegidos === //
-        virtual std::vector<bool> cruzamiento(uint i, uint j) {};
-        virtual std::vector<bool> mutacion(uint i) {};
-        virtual void iteration() {};
+        // virtual std::vector<bool> cruzamiento(uint i, uint j) {};
+        // virtual std::vector<bool> mutacion(uint i) {};
+        // virtual void iteration() {};
     public:
         AE(uint size_poblation, double beta, std::string src);
         ~AE() = default;
         uint FE(uint i);
         void print();
         void print(uint i);
-        void solve(uint max_iterations) {};
+        // void solve(uint max_iterations);
 };
 
 #endif

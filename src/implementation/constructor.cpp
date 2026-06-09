@@ -15,23 +15,30 @@ AE::AE(uint size_poblation, double beta, string src) {
     this->beta = beta;
 
     // === Lectura archivo de texto === //
-    ifstream file(src);
+ifstream file(src);
     if (!file.is_open())
         throw runtime_error("Error: No se pudo abrir el archivo " + src);
-    if (!(file >> this->num_nodes >> this->R >> this->alpha))
+    
+    // Agregamos una variable extra para absorber el '100' del final de la primera línea
+    double extra_val; 
+    if (!(file >> this->num_nodes >> this->R >> this->alpha >> extra_val))
         throw std::runtime_error("Error: Formato incorrecto en la primera linea del archivo.");
     
     nodes = vector<node>(num_nodes);
     distancias = vector<vector<double>>(num_nodes, vector<double>(num_nodes));
 
-    for (uint i = 0;i < num_nodes;i++)
-        if (!(file >> i >> nodes[i].C_i >> nodes[i].D_i >> nodes[i].f_i >> nodes[i].S_i >> nodes[i].is_far))
-            throw runtime_error("Error: Una línea es inválida");
+    for (uint i = 0;i < num_nodes;i++) {
+        uint id_nodo; // Usamos una variable temporal para leer el ID, sin tocar la 'i'
+        if (!(file >> id_nodo >> nodes[i].C_i >> nodes[i].D_i >> nodes[i].f_i >> nodes[i].S_i >> nodes[i].is_far))
+            throw runtime_error("Error: Una línea de nodo es inválida");
+    }
 
-    for (uint i = 0;i < num_nodes;i++)
-        for (uint j = 0;j < num_nodes;j++)
+    for (uint i = 0;i < num_nodes;i++) {
+        for (uint j = 0;j < num_nodes;j++) {
             if (!(file >> distancias[i][j]))
                 throw runtime_error("Error al leer una distancia");
+        }
+    }
 
     file.close();
     // === Fin lectura archivo de text === //
