@@ -15,5 +15,6 @@ int main(int argc, char* argv[]) {
 
     AE solver(size_poblation, beta, src); // Inicializa las soluciones iniciales.
     solver.print();
+    
     return 0;
 }
