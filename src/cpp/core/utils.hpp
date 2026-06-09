@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <random>
 #include <cstdint>
+#include <queue>
 
 struct node {
     bool is_far; // Declara si el nodo es lejano o no.
@@ -47,9 +48,9 @@ class AE {
 
         // === Método protegido === //
         virtual void cruce(int i, int j, int i_p, int j_p, std::vector<std::vector<uint8_t>>& next_gen);
+        void iteration();
     public:
         AE(uint64_t size_poblation, double beta, std::string src);
-        bool repair(int i);
         results print();
         virtual ~AE();
         virtual uint64_t FE(int i);

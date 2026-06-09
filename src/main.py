@@ -1,10 +1,10 @@
 import ae_modulo
 import matplotlib.pyplot as plt
 
-TAMANO_POBLACION = 100
-BETA = 0.25
-ITERACIONES_TOTALES = 1000000
-PASO_GRAFICO = 1000
+TAMANO_POBLACION = 500
+BETA = 0.1
+ITERACIONES_TOTALES = 100000
+PASO_GRAFICO = 5000
 RUTA = "instancias/instancia_1.txt"
 
 historial_normal_mejor = []
@@ -16,7 +16,7 @@ try:
     ae_punto = ae_modulo.AE(TAMANO_POBLACION, BETA, RUTA)
 
 except RuntimeError as e:
-    print(f"\n❌ Error: {e}")
+    print(f"\nError: {e}")
 
 for iteracion_actual in range(0, ITERACIONES_TOTALES, PASO_GRAFICO):
     # Avanzar 10 iteraciones en el algoritmo normal
@@ -38,25 +38,19 @@ for iteracion_actual in range(0, ITERACIONES_TOTALES, PASO_GRAFICO):
     if (iteracion_actual + PASO_GRAFICO) % 100 == 0:
         print(f" -> Iteración {iteracion_actual + PASO_GRAFICO}/{ITERACIONES_TOTALES} procesada.")
 
-# ==========================================
-# 4. GENERACIÓN DEL GRÁFICO (MATPLOTLIB)
-# ==========================================
 print("\nGenerando gráfica de convergencia...")
 
 plt.figure(figsize=(10, 6))
 
-# Dibujar las curvas de ambos algoritmos
 plt.plot(eje_x, historial_normal_mejor, label='AE Normal (Cruce Estándar)', color='blue', linewidth=2)
 plt.plot(eje_x, historial_uniforme_mejor, label='AE Uniforme (Cruce Uniforme)', color='orange', linewidth=2)
 
-# Configuración de etiquetas y estilo
 plt.title('Curva de Convergencia: AE Normal vs AE Uniforme', fontsize=14, fontweight='bold')
 plt.xlabel('Iteraciones', fontsize=12)
 plt.ylabel('Mejor Función de Evaluación (Fitness)', fontsize=12)
 plt.grid(True, linestyle='--', alpha=0.6)
 plt.legend(fontsize=11)
 
-# Mostrar anotaciones finales en la gráfica
 mejor_normal_final = historial_normal_mejor[-1]
 mejor_uniforme_final = historial_uniforme_mejor[-1]
 print(f"\nResultado Final:")

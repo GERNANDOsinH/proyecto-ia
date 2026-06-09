@@ -3,9 +3,10 @@ from pybind11.setup_helpers import Pybind11Extension, build_ext
 
 ext_modules = [
     Pybind11Extension(
-        "ae_modulo",                             # Nombre del módulo en Python
-        ["bindings.cpp", "utils.cpp"],           # Archivos fuente a compilar
-        extra_compile_args=["-std=c++11", "-O3"] # Opciones extra (ej. optimización)
+        "ae_modulo",                             
+        # Actualizamos las rutas hacia la nueva estructura
+        ["src/cpp/bindings/bindings.cpp", "src/cpp/core/utils.cpp"],           
+        extra_compile_args=["-std=c++11", "-O3"] 
     ),
 ]
 

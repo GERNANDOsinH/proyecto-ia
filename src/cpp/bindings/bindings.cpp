@@ -1,5 +1,5 @@
 #include <pybind11/pybind11.h>
-#include "utils.hpp"
+#include "../core/utils.hpp"
 
 namespace py = pybind11;
 
@@ -16,8 +16,6 @@ PYBIND11_MODULE(ae_modulo, m) {
         // Exponer el constructor
         .def(py::init<uint64_t, double, std::string>(), 
              py::arg("size_poblation"), py::arg("beta"), py::arg("src"))
-        // Exponer los métodos públicos
-        .def("repair", &AE::repair, py::arg("i"))
         .def("print", &AE::print)
         .def("FE", &AE::FE, py::arg("i"))
         .def("solve", &AE::solve, py::arg("max_iterations"));
