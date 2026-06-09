@@ -53,7 +53,7 @@ AE::AE(uint64_t size_poblation, double beta, string src) {
 }
 AE::~AE() {}
 results AE::print() {
-    results out = {1e9, 0};
+    results out = {1000000000ULL, 0};
     uint64_t current_FE;
     for (int i = 0;i < num_nodes;i++) {
         current_FE = FE(i);

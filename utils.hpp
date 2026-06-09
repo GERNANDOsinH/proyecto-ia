@@ -63,4 +63,4 @@ class uniform_AE : public AE {
         uniform_AE(uint64_t size_poblation, double beta, std::string src) : AE(size_poblation, beta, src) {};
 };
 
-#endif;
+#endif
