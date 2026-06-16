@@ -6,7 +6,7 @@ using namespace std;
 
 void AE::iteration() {
     uint curr_fe;
-    vector<double> FEs(num_nodes);
+    vector<double> FEs(size_poblation);
     double total = 0.0;
     double better = 0.0;
     uint better_index = 0;
