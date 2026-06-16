@@ -48,7 +48,7 @@ void AE::iteration() {
     nueva_poblacion.push_back(poblacion[0]);
     uniform_int_distribution<uint> dist_padres(0, padres.size() - 1);
 
-while (nueva_poblacion.size() < size_poblation) {
+    while (nueva_poblacion.size() < size_poblation) {
         uint idx_p1 = padres[dist_padres(gen)];
         uint idx_p2 = padres[dist_padres(gen)];
         

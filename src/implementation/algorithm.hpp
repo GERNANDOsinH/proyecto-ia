@@ -35,9 +35,9 @@ class AE {
         std::vector<std::vector<double>> distancias;
 
         // === Métodos protegidos === //
-        virtual std::vector<std::vector<bool>> cruzamiento(uint i, uint j) {};
-        virtual void mutacion(uint i) {};
-        virtual void iteration() {};
+        virtual std::vector<std::vector<bool>> cruzamiento(uint i, uint j);
+        virtual void mutacion(uint i);
+        virtual void iteration();
     public:
         AE(uint size_poblation, double beta, std::string src);
         ~AE() = default;

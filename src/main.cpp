@@ -13,7 +13,14 @@ int main(int argc, char* argv[]) {
     double beta = stod(argv[2]);
     string src = argv[3];
 
-    AE solver(size_poblation, beta, src); // Inicializa las soluciones iniciales.
+    cout << "==== POBLACIÓN INICIAL ====" << endl;
+
+    AE solver(size_poblation, beta, src);
+    solver.print();
+    solver.solve(10000);
+
+    cout << "==== POBLACIÓN FINAL ====" << endl;
+
     solver.print();
     
     return 0;
