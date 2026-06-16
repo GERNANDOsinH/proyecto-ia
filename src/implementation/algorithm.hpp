@@ -18,6 +18,8 @@ class AE {
     protected:
         // === Atributos algoritmo === //
         uint size_poblation;
+        uint penalty_1; // Penalización no transitabilidad de los nodos.
+        uint penalty_2; // Penalización demanda no satisfecha.
         double beta;
 
         std::vector<std::vector<bool>> poblacion;
@@ -32,8 +34,8 @@ class AE {
         std::vector<std::vector<double>> distancias;
 
         // === Métodos protegidos === //
-        // virtual std::vector<bool> cruzamiento(uint i, uint j) {};
-        // virtual std::vector<bool> mutacion(uint i) {};
+        virtual std::vector<std::vector<bool>> cruzamiento(uint i, uint j) {};
+        virtual void mutacion(uint i) {};
         // virtual void iteration() {};
     public:
         AE(uint size_poblation, double beta, std::string src);
