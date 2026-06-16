@@ -24,6 +24,7 @@ class AE {
 
         std::vector<std::vector<bool>> poblacion;
         // === Atributos problema === //
+        uint max_cost;
         uint CityArea;
         uint R;
         uint num_nodes;
@@ -36,7 +37,7 @@ class AE {
         // === Métodos protegidos === //
         virtual std::vector<std::vector<bool>> cruzamiento(uint i, uint j) {};
         virtual void mutacion(uint i) {};
-        // virtual void iteration() {};
+        virtual void iteration() {};
     public:
         AE(uint size_poblation, double beta, std::string src);
         ~AE() = default;

@@ -15,9 +15,10 @@ AE::AE(uint size_poblation, double beta, string src) {
     this->penalty_2 = 0;
     this->size_poblation = size_poblation;
     this->beta = beta;
+    this->max_cost = 0;
 
     // === Lectura archivo de texto === //
-ifstream file(src);
+    ifstream file(src);
     if (!file.is_open())
         throw runtime_error("Error: No se pudo abrir el archivo " + src);
     
@@ -60,4 +61,7 @@ ifstream file(src);
         for (uint j = 0;j < num_nodes;j++)
             poblacion[i][j] = (coin_flip(gen) < current_density)? true : false;
     }
+
+    for (uint j = 0;j < num_nodes;j++)
+        max_cost += nodes[j].C_i;
 }
