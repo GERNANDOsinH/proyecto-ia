@@ -17,11 +17,10 @@ int main(int argc, char* argv[]) {
 
     AE solver(size_poblation, beta, src);
     solver.print();
-    solver.solve(10000);
+    solver.solve(1000000);
 
     cout << "==== POBLACIÓN FINAL ====" << endl;
-
     solver.print();
-    
+
     return 0;
 }
