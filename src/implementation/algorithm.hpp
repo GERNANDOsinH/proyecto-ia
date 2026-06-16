@@ -44,7 +44,7 @@ class AE {
         uint FE(uint i);
         void print();
         void print(uint i);
-        // void solve(uint max_iterations);
+        void solve(uint max_iterations);
 };
 
 #endif
