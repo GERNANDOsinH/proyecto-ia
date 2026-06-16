@@ -11,6 +11,8 @@ using namespace std;
  * @param src: Dirección donde se encuntra un archivo de texto con los datos del problema.
  */
 AE::AE(uint size_poblation, double beta, string src) {
+    this->penalty_1 = 0;
+    this->penalty_2 = 0;
     this->size_poblation = size_poblation;
     this->beta = beta;
 
