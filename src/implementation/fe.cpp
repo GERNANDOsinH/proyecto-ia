@@ -11,6 +11,8 @@ uint AE::FE(uint i) {
         for (uint k = 0;k < num_nodes;k++) {
             if (j == k)
                 continue;
+            if (!poblacion[i][k])
+                continue;
             if (nodes[k].S_i*distancias[j][k] <= R)
                 power += nodes[k].f_i;
         }
