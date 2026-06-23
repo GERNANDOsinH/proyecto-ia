@@ -5,11 +5,8 @@
 using namespace std;
 
 vector<vector<bool>> AE::cruzamiento(uint i, uint j) {
-    random_device rd;
-    mt19937 gen(rd());
-
     uniform_int_distribution<uint> dist(0, num_nodes-1);
-    uint punto = dist(gen);
+    uint punto = dist(rng);
 
     vector<vector<bool>> ret(2, vector<bool>(num_nodes));
 

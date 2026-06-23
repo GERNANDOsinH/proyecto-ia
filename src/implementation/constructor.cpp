@@ -10,12 +10,16 @@ using namespace std;
  * @param beta: Probabilidad de mutaciones.
  * @param src: Dirección donde se encuntra un archivo de texto con los datos del problema.
  */
-AE::AE(uint size_poblation, double beta, string src) {
-    this->penalty_1 = 0;
-    this->penalty_2 = 0;
+AE::AE(uint size_poblation, uint P1, uint P2, uint P3, double beta, string src) {
+    this->penalty_1 = P1;
+    this->penalty_2 = P2;
+    this->penalty_3 = P3;
     this->size_poblation = size_poblation;
     this->beta = beta;
     this->max_cost = 0;
+
+    random_device rd;
+    rng.seed(rd());
 
     // === Lectura archivo de texto === //
     ifstream file(src);
@@ -49,17 +53,14 @@ AE::AE(uint size_poblation, double beta, string src) {
     // === Inicio generación inicial === //
     poblacion.resize(size_poblation, vector<bool>(num_nodes, false));
 
-    random_device rd;
-    mt19937 gen(rd());
-
     uniform_real_distribution<double> density_dist(0.05, 0.25); 
     uniform_real_distribution<double> coin_flip(0.0, 1.0);
 
     for (uint i = 0;i < size_poblation;i++) {
-        double current_density = density_dist(gen);
+        double current_density = density_dist(rng);
         
         for (uint j = 0;j < num_nodes;j++)
-            poblacion[i][j] = (coin_flip(gen) < current_density)? true : false;
+            poblacion[i][j] = (coin_flip(rng) < current_density)? true : false;
     }
 
     for (uint j = 0;j < num_nodes;j++)

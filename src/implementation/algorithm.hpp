@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <random>
 
 struct node {
     uint C_i;    // Costo de instalar un cargador en el nodo i.
@@ -20,7 +21,9 @@ class AE {
         uint size_poblation;
         uint penalty_1; // Penalización no transitabilidad de los nodos.
         uint penalty_2; // Penalización demanda no satisfecha.
-        double beta;
+        uint penalty_3; // Penalización punto remoto no usado.
+        double beta;    // Probabilidad de mutación.
+        std::mt19937 rng;
 
         std::vector<std::vector<bool>> poblacion;
         // === Atributos problema === //
@@ -39,7 +42,7 @@ class AE {
         virtual void mutacion(uint i);
         virtual void iteration();
     public:
-        AE(uint size_poblation, double beta, std::string src);
+        AE(uint size_poblation, uint P1, uint P2, uint P3, double beta, std::string src);
         ~AE() = default;
         uint FE(uint i);
         void print();
@@ -47,4 +50,4 @@ class AE {
         void solve(uint max_iterations);
 };
 
-#endif
+#endif;
