@@ -13,17 +13,17 @@ int main(int argc, char* argv[]) {
     uint P1 = stoull(argv[2]);
     uint P2 = stoull(argv[3]);
     uint P3 = stoull(argv[4]);
-    double beta = stod(argv[5]);
+    uint max_iterations = stoull(argv[5]);
     string src = argv[6];
 
     cout << "==== POBLACIÓN INICIAL ====" << endl;
 
-    AE solver(size_poblation, P1, P2, P3, beta, src);
+    AE solver(size_poblation, P1, P2, P3, src);
     auto aux = AE(solver);
     aux.repair();
     aux.print();
 
-    solver.solve(1000000);
+    solver.solve(1000);
 
     cout << "==== POBLACIÓN FINAL ====" << endl;
     solver.repair();

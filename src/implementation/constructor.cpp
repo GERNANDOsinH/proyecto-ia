@@ -10,12 +10,11 @@ using namespace std;
  * @param beta: Probabilidad de mutaciones.
  * @param src: Dirección donde se encuntra un archivo de texto con los datos del problema.
  */
-AE::AE(uint size_poblation, uint P1, uint P2, uint P3, double beta, string src) {
+AE::AE(uint size_poblation, uint P1, uint P2, uint P3, string src) {
     this->penalty_1 = P1;
     this->penalty_2 = P2;
     this->penalty_3 = P3;
     this->size_poblation = size_poblation;
-    this->beta = beta;
     this->max_cost = 0;
 
     random_device rd;
@@ -62,6 +61,8 @@ AE::AE(uint size_poblation, uint P1, uint P2, uint P3, double beta, string src) 
         for (uint j = 0;j < num_nodes;j++)
             poblacion[i][j] = (coin_flip(rng) < current_density)? true : false;
     }
+
+    this->beta = 1/(double)num_nodes;
 
     for (uint j = 0;j < num_nodes;j++)
         max_cost += nodes[j].C_i;

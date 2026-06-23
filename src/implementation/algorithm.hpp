@@ -42,7 +42,7 @@ class AE {
         virtual void mutacion(uint i);
         virtual void iteration();
     public:
-        AE(uint size_poblation, uint P1, uint P2, uint P3, double beta, std::string src);
+        AE(uint size_poblation, uint P1, uint P2, uint P3, std::string src);
         ~AE() = default;
         uint FE(uint i);
         void print();
