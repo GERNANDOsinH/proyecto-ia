@@ -48,6 +48,7 @@ class AE {
         void print();
         void print(uint i);
         void solve(uint max_iterations);
+        void repair(uint i);
 };
 
 #endif;
