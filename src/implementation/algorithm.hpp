@@ -19,14 +19,13 @@ struct node {
 class AE {
     protected:
         // === Atributos algoritmo === //
-        uint size_poblation;
-        uint penalty_1; // Penalización no transitabilidad de los nodos.
-        uint penalty_2; // Penalización demanda no satisfecha.
-        uint penalty_3; // Penalización punto remoto no usado.
-        double beta;    // Probabilidad de mutación.
-        std::mt19937 rng;
+        uint size_poblation; // Tamaño población.
+        double beta;         // Probabilidad de mutación.
+        uint penalty_1;      // Penalización no transitivilidad.
+        std::mt19937 rng;    // Motor generador de números aleatorios.
 
         std::vector<std::vector<bool>> poblacion;
+        std::vector<uint> nearest_feasible_node; 
         // === Atributos problema === //
         uint max_cost;
         uint CityArea;
@@ -39,18 +38,18 @@ class AE {
         std::vector<std::vector<double>> distancias;
 
         // === Métodos protegidos === //
-        virtual std::vector<std::vector<bool>> cruzamiento(uint i, uint j);
-        virtual void mutacion(uint i);
-        virtual void iteration();
+        std::vector<std::vector<bool>> cruzamiento(uint i, uint j);
+        void mutacion(uint i);
+        void iteration();
+        void precalculate_feasibility();
+        void repair(std::vector<bool>& individuo);
     public:
-        AE(uint size_poblation, uint P1, uint P2, uint P3, std::string src);
+        AE(uint size_poblation, uint P1, std::string src);
         ~AE() = default;
         uint FE(uint i);
         void print();
         void print(uint i);
         void solve(uint max_iterations);
-        void repair();
-        void repair(uint i);
 };
 
 #endif

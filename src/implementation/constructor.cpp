@@ -10,10 +10,8 @@ using namespace std;
  * @param beta: Probabilidad de mutaciones.
  * @param src: Dirección donde se encuntra un archivo de texto con los datos del problema.
  */
-AE::AE(uint size_poblation, uint P1, uint P2, uint P3, string src) {
+AE::AE(uint size_poblation, uint P1, string src) {
     this->penalty_1 = P1;
-    this->penalty_2 = P2;
-    this->penalty_3 = P3;
     this->size_poblation = size_poblation;
     this->max_cost = 0;
 
@@ -48,6 +46,8 @@ AE::AE(uint size_poblation, uint P1, uint P2, uint P3, string src) {
 
     file.close();
     // === Fin lectura archivo de text === //
+
+    this->precalculate_feasibility();
     
     // === Inicio generación inicial === //
     poblacion.resize(size_poblation, vector<bool>(num_nodes, false));

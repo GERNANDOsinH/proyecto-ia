@@ -4,59 +4,38 @@ using namespace std;
 
 uint AE::FE(uint i) {
     uint curr_fe = 0;
-    uint power;
-    for (uint j = 0;j < num_nodes;j++){
-        power = (poblacion[i][j])? nodes[j].f_i : 0;
-        curr_fe += (poblacion[i][j])? nodes[i].C_i : 0;
-        for (uint k = 0;k < num_nodes;k++) {
-            if (j == k)
-                continue;
-            if (!poblacion[i][k])
-                continue;
-            if (nodes[k].S_i*distancias[j][k] <= R)
-                power += nodes[k].f_i;
+    
+    // Cálculo de Costo Real (Corrigiendo el bug de indices nodes[i] a nodes[j])
+    for (uint j = 0; j < num_nodes; j++) {
+        if (poblacion[i][j]) {
+            curr_fe += nodes[j].C_i; 
         }
-        if (power < nodes[j].D_i)
-            curr_fe += penalty_2;
     }
-    vector<vector<bool>> alcanzable(num_nodes, vector<bool>(num_nodes, false));
+
+    // Construcción de la matriz de alcanzabilidad 
+    std::vector<std::vector<bool>> alcanzable(num_nodes, std::vector<bool>(num_nodes, false));
     for (uint u = 0; u < num_nodes; u++) {
         for (uint v = 0; v < num_nodes; v++) {
-            if (u == v || distancias[u][v] <= R) {
-                alcanzable[u][v] = true;
-            }
+            if (u == v || distancias[u][v] <= R) alcanzable[u][v] = true;
         }
     }
     for (uint k = 0; k < num_nodes; k++) {
         if (!poblacion[i][k]) continue;
-
         for (uint u = 0; u < num_nodes; u++) {
             for (uint v = 0; v < num_nodes; v++) {
-                if (alcanzable[u][k] && alcanzable[k][v]) {
-                    alcanzable[u][v] = true;
-                }
+                if (alcanzable[u][k] && alcanzable[k][v]) alcanzable[u][v] = true;
             }
         }
     }
+
+    // Cálculo de rutas inválidas (Se mantiene penalty_1 por requerir validación global del subgrafo)
     uint rutas_invalidas = 0;
     for (uint u = 0; u < num_nodes; u++) {
         for (uint v = 0; v < num_nodes; v++) {
-            if (!alcanzable[u][v]) {
-                rutas_invalidas++;
-            }
+            if (!alcanzable[u][v]) rutas_invalidas++;
         }
     }
     curr_fe += rutas_invalidas * penalty_1;
-
-    bool far_is_covered = false;
-
-    for (uint j = 0;j < num_nodes;j++)
-        if (poblacion[i][j] && nodes[j].is_far)
-            far_is_covered = true;
-
-    if (!far_is_covered) {
-        curr_fe += penalty_3;
-    }
 
     return curr_fe;
 }
