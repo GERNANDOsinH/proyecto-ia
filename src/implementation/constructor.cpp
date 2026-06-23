@@ -7,7 +7,7 @@ using namespace std;
 /**
  * Método constructor.
  * @param size_poblation: Tamaño de población que se usara.
- * @param beta: Probabilidad de mutaciones.
+ * @param P1: Penalización por incumplimiento de transitividad.
  * @param src: Dirección donde se encuntra un archivo de texto con los datos del problema.
  */
 AE::AE(uint size_poblation, uint P1, string src) {

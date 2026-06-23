@@ -4,6 +4,13 @@
 
 using namespace std;
 
+/**
+ * Método cruzamiento por punto.
+ * @param i: Indice del padre 1.
+ * @param j: Indice del padre 2.
+ * 
+ * @return 2 hijos resultantes del cruzamiento.
+ */
 vector<vector<bool>> AE::cruzamiento(uint i, uint j) {
     uniform_int_distribution<uint> dist(0, num_nodes-1);
     uint punto = dist(rng);

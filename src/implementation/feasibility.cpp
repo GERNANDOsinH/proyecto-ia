@@ -7,9 +7,6 @@ void AE::precalculate_feasibility() {
     nearest_feasible_node.resize(num_nodes);
 
     for (uint i = 0; i < num_nodes; i++) {
-        // Definimos la regla de qué hace a un nodo "geográfica/técnicamente" válido.
-        // Asumimos que es válido si tiene potencia de carga mayor a 0 y un costo razonable.
-        // Ajusta el '99999' según cómo representes un nodo intransitable en tu txt.
         bool es_nodo_valido = (nodes[i].f_i > 0 && nodes[i].C_i < 99999); 
 
         if (es_nodo_valido) {
