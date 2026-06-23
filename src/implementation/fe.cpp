@@ -48,5 +48,15 @@ uint AE::FE(uint i) {
     }
     curr_fe += rutas_invalidas * penalty_1;
 
+    bool far_is_covered = false;
+
+    for (uint j = 0;j < num_nodes;j++)
+        if (poblacion[i][j] && nodes[j].is_far)
+            far_is_covered = true;
+
+    if (!far_is_covered) {
+        curr_fe += penalty_3;
+    }
+
     return curr_fe;
 }
