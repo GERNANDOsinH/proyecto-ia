@@ -58,9 +58,6 @@ AE::AE(uint size_poblation, uint P1, string src) {
     for (uint j = 0;j < num_nodes;j++)
         max_cost += nodes[j].C_i;
 
-    uint best_index = 0;
-    uint best_FE = max_cost;
-    
     for (uint i = 0;i < size_poblation;i++) {
         double current_density = density_dist(rng);
         
@@ -68,15 +65,7 @@ AE::AE(uint size_poblation, uint P1, string src) {
             poblacion[i][j] = (coin_flip(rng) < current_density)? true : false;
 
         repair(poblacion[i]);
-        
-        uint curr_fe = FE(i);
-        if (curr_fe < best_FE) {
-            best_FE = curr_fe;
-            best_index = 0;
-        } 
     }
-
-    swap(poblacion[0], poblacion[best_index]);
 
     this->beta = 1/(double)num_nodes;
 }
