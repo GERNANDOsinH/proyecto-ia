@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
     aux.repair();
     aux.print();
 
-    solver.solve(1000);
+    solver.solve(max_iterations);
 
     cout << "==== POBLACIÓN FINAL ====" << endl;
     solver.repair();

@@ -13,6 +13,7 @@ struct node {
     uint D_i;    // Demenda en el nodo i.
     uint f_i;    // Poder de carga del nodo i.
     bool is_far; // Es el nodo remoto.
+    double x, y; // Punto en el que se ubica el nodo i.
 };
 
 class AE {
@@ -52,4 +53,4 @@ class AE {
         void repair(uint i);
 };
 
-#endif;
+#endif
