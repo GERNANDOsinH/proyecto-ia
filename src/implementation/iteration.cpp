@@ -66,7 +66,8 @@ void AE::iteration() {
     }
 
     poblacion = nueva_poblacion;
-    for (uint i = 1; i < size_poblation; i++)
+    for (uint i = 1; i < size_poblation; i++){
         mutacion(i);
-
+        repair(poblacion[i]);
+    }
 }

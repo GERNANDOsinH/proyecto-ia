@@ -3,7 +3,6 @@
 using namespace std;
 
 void AE::print(uint i) {
-    repair(poblacion[i]);
     for (uint j = 0; j < num_nodes; j++)
         cout << ((poblacion[i][j])? "1 " : "0 ");
     cout << "FE: " << FE(i) << endl;
@@ -23,7 +22,6 @@ void AE::print() {
 
     // Recorremos el resto de la población buscando el FE mínimo (el mejor)
     for (uint i = 1; i < size_poblation; i++) {
-        repair(poblacion[i]); // Reparamos para obtener su configuración y costo real
         uint current_fe = FE(i);
         
         if (current_fe < min_fe) {

@@ -60,6 +60,8 @@ AE::AE(uint size_poblation, uint P1, string src) {
         
         for (uint j = 0;j < num_nodes;j++)
             poblacion[i][j] = (coin_flip(rng) < current_density)? true : false;
+
+        repair(poblacion[i]);
     }
 
     this->beta = 1/(double)num_nodes;
