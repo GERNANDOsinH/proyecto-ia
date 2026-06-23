@@ -2,6 +2,11 @@
 #include <vector>
 #include <algorithm>
 
+void AE::repair() {
+    for (uint i = 0;i < size_poblation;i++)
+        repair(i);
+}
+
 void AE::repair(uint i) {
     // Obtenemos la referencia a la solución actual (individuo i)
     std::vector<bool>& sol = poblacion[i];
